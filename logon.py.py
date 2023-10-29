@@ -22,13 +22,13 @@ lText = "Login"
 loginS = my_font.render(lText, True, (0,0,0))
 login_rect = loginS.get_rect()
 login_rect.center = (100,165)
-#lClick = pygame.rect(75,150,50,30)
+
 
 qText = "Quit"
 quitS = my_font.render(qText, True, (0,0,0))
 quit_rect = quitS.get_rect()
 quit_rect.center = (100,215)
-#qClick = pygame.rect(75,200,50,30)
+
 
 login = Square()
 quit = Square()
@@ -48,7 +48,7 @@ while run:
 
             if login_rect.collidepoint(mouse_pos):
                 go = 0
-                screen.fill((0,0,0))
+                run = False
 
             if quit_rect.collidepoint(mouse_pos):
                 go = 1
@@ -63,7 +63,58 @@ while run:
 if go == 1:
     print()
 else:
+    nScreen = pygame.display.set_mode((800, 600))
+    anotherFont = pygame.font.SysFont('Comic Sans MS', 30)
+
+    uText = "Username"
+    usernameS = anotherFont.render(uText, True, (255,255,255))
+    username_rect = loginS.get_rect()
+    username_rect.center = (340,165)
+
+    username = ""
+    input_box = pygame.Rect(300, 230, 200, 40)
+    color_inactive = pygame.Color('lightskyblue3')
+    color_active = pygame.Color('dodgerblue2')
+    color = color_inactive
+    active = False
+
+
     run = True
     while run:
-        pygame.display.flip()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
 
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if input_box.collidepoint(event.pos):
+                    active = not active
+                else:
+                    active = False
+                color = color_active if active else color_inactive
+
+            if event.type == pygame.KEYDOWN:
+                if active:
+                    if event.key == pygame.K_RETURN:  
+                        print("Username:", username)#######
+                        username = ""  
+                    elif event.key == pygame.K_BACKSPACE:  
+                        username = username[:-1]
+                    else:
+                        username += event.unicode
+
+        
+        nScreen.fill((0, 0, 0))
+
+        
+        txt_surface = my_font.render(username, True, color)
+        width = max(200, txt_surface.get_width()+10)
+        input_box.w = width
+        nScreen.blit(txt_surface, (input_box.x+5, input_box.y+5))
+        nScreen.blit(usernameS, username_rect)
+        pygame.draw.rect(nScreen, color, input_box, 2)
+
+        pygame.display.flip()
+    
+
+
+ 
