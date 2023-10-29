@@ -63,6 +63,9 @@ while run:
 if go == 1:
     print()
 else:
+    f = open('U+P.txt','a')
+
+
     nScreen = pygame.display.set_mode((800, 600))
     anotherFont = pygame.font.SysFont('Comic Sans MS', 30)
 
@@ -77,19 +80,31 @@ else:
     password_rect.center = (400,215)
 
 
+    showAll = Square()
+    sText = 'Show all:'
+    showAllS = anotherFont.render(sText, True, (255,255,255))
+    showAll_rect = showAllS.get_rect()
+    showAll_rect.center = (400, 400)
+
     username = ""
     password = ""
     username_box = pygame.Rect(300, 100, 200, 40)
     password_box = pygame.Rect(300, 250, 200, 40)
     color_inactive = pygame.Color('white')
-    color_active = pygame.Color('red')
+    color_active = pygame.Color('green')
     color = color_inactive
     active = None
 
-    # Main game loop
     run = True
     while run:
         for event in pygame.event.get():
+            if event.type == MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    mouse_pos = pygame.mouse.get_pos()
+
+                if showAll_rect.collidepoint(mouse_pos):
+                    print(open('U+P.txt').read())
+                    
             if event.type == pygame.QUIT:
                 run = False
 
@@ -109,8 +124,10 @@ else:
                     if event.key == pygame.K_RETURN:
                         if active == username_box:
                             print('Username:', username)
+                            f.write(username + ', ')
                         else:
                             print('Password:',password)
+                            f.write(password + '\n')
                         username = ""
                         password = ""
                     elif event.key == pygame.K_BACKSPACE:
@@ -124,10 +141,10 @@ else:
                         else:
                             password += event.unicode
 
-        # Clear the screen
+   
         screen.fill((0, 0, 0))
 
-        # Render the input boxes and text
+      
         txt_surface_username = anotherFont.render(username, True, color)
         txt_surface_password = anotherFont.render('*' * len(password), True, color)
         
@@ -138,6 +155,7 @@ else:
         nScreen.blit(txt_surface_password, (password_box.x + 5, password_box.y + 5))
         nScreen.blit(usernameS, username_rect)
         nScreen.blit(passwordS, password_rect)
+        nScreen.blit(showAllS, showAll_rect)
         
         pygame.draw.rect(screen, color, username_box, 2)
         pygame.draw.rect(screen, color, password_box, 2)
