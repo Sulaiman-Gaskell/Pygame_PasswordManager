@@ -18,13 +18,13 @@ pygame.font.init()
 screen = pygame.display.set_mode((200, 400))
 
 my_font = pygame.font.SysFont('Comic Sans MS', 10)
-lText = "Login"
+lText = 'Login'
 loginS = my_font.render(lText, True, (0,0,0))
 login_rect = loginS.get_rect()
 login_rect.center = (100,165)
 
 
-qText = "Quit"
+qText = 'Quit'
 quitS = my_font.render(qText, True, (0,0,0))
 quit_rect = quitS.get_rect()
 quit_rect.center = (100,215)
@@ -66,19 +66,27 @@ else:
     nScreen = pygame.display.set_mode((800, 600))
     anotherFont = pygame.font.SysFont('Comic Sans MS', 30)
 
-    uText = "Username"
+    uText = 'Username:'
     usernameS = anotherFont.render(uText, True, (255,255,255))
-    username_rect = loginS.get_rect()
-    username_rect.center = (340,165)
+    username_rect = usernameS.get_rect()
+    username_rect.center = (400,65)
+
+    pText = 'Password:'
+    passwordS = anotherFont.render(pText, True,(255,255,255))
+    password_rect = passwordS.get_rect()
+    password_rect.center = (400,215)
+
 
     username = ""
-    input_box = pygame.Rect(300, 230, 200, 40)
-    color_inactive = pygame.Color('lightskyblue3')
-    color_active = pygame.Color('dodgerblue2')
+    password = ""
+    username_box = pygame.Rect(300, 100, 200, 40)
+    password_box = pygame.Rect(300, 250, 200, 40)
+    color_inactive = pygame.Color('white')
+    color_active = pygame.Color('red')
     color = color_inactive
-    active = False
+    active = None
 
-
+    # Main game loop
     run = True
     while run:
         for event in pygame.event.get():
@@ -86,32 +94,53 @@ else:
                 run = False
 
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if input_box.collidepoint(event.pos):
-                    active = not active
+                if username_box.collidepoint(event.pos):
+                    active = username_box
+                    color = color_active
+                elif password_box.collidepoint(event.pos):
+                    active = password_box
+                    color = color_active
                 else:
-                    active = False
-                color = color_active if active else color_inactive
+                    active = None
+                    color = color_inactive
 
             if event.type == pygame.KEYDOWN:
                 if active:
-                    if event.key == pygame.K_RETURN:  
-                        print("Username:", username)#######
-                        username = ""  
-                    elif event.key == pygame.K_BACKSPACE:  
-                        username = username[:-1]
+                    if event.key == pygame.K_RETURN:
+                        if active == username_box:
+                            print('Username:', username)
+                        else:
+                            print('Password:',password)
+                        username = ""
+                        password = ""
+                    elif event.key == pygame.K_BACKSPACE:
+                        if active == username_box:
+                            username = username[:-1]
+                        else:
+                            password = password[:-1]
                     else:
-                        username += event.unicode
+                        if active == username_box:
+                            username += event.unicode
+                        else:
+                            password += event.unicode
 
-        
-        nScreen.fill((0, 0, 0))
+        # Clear the screen
+        screen.fill((0, 0, 0))
 
+        # Render the input boxes and text
+        txt_surface_username = anotherFont.render(username, True, color)
+        txt_surface_password = anotherFont.render('*' * len(password), True, color)
         
-        txt_surface = my_font.render(username, True, color)
-        width = max(200, txt_surface.get_width()+10)
-        input_box.w = width
-        nScreen.blit(txt_surface, (input_box.x+5, input_box.y+5))
+        username_box.w = max(200, txt_surface_username.get_width() + 10)
+        password_box.w = max(200, txt_surface_password.get_width() + 10)
+        
+        nScreen.blit(txt_surface_username, (username_box.x + 5, username_box.y + 5))
+        nScreen.blit(txt_surface_password, (password_box.x + 5, password_box.y + 5))
         nScreen.blit(usernameS, username_rect)
-        pygame.draw.rect(nScreen, color, input_box, 2)
+        nScreen.blit(passwordS, password_rect)
+        
+        pygame.draw.rect(screen, color, username_box, 2)
+        pygame.draw.rect(screen, color, password_box, 2)
 
         pygame.display.flip()
     
