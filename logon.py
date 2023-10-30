@@ -46,13 +46,13 @@ while run:
             if event.button == 1:
                 mouse_pos = pygame.mouse.get_pos()
 
-            if login_rect.collidepoint(mouse_pos):
-                go = 0
-                run = False
-
-            if quit_rect.collidepoint(mouse_pos):
-                go = 1
-                run = False
+                if login_rect.collidepoint(mouse_pos):
+                    go = 0
+                    run = False
+    
+                if quit_rect.collidepoint(mouse_pos):
+                    go = 1
+                    run = False
 
         elif event.type == QUIT:
             run = False
