@@ -109,15 +109,16 @@ else:
                 run = False
 
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if username_box.collidepoint(event.pos):
-                    active = username_box
-                    color = color_active
-                elif password_box.collidepoint(event.pos):
-                    active = password_box
-                    color = color_active
-                else:
-                    active = None
-                    color = color_inactive
+                if event.button == 1:
+                    if username_box.collidepoint(event.pos):
+                        active = username_box
+                        color = color_active
+                    elif password_box.collidepoint(event.pos):
+                        active = password_box
+                        color = color_active
+                    else:
+                        active = None
+                        color = color_inactive
 
             if event.type == pygame.KEYDOWN:
                 if active:
