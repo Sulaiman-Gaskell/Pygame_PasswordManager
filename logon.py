@@ -101,9 +101,9 @@ else:
             if event.type == MOUSEBUTTONDOWN:
                 if event.button == 1:
                     mouse_pos = pygame.mouse.get_pos()
-
-                if showAll_rect.collidepoint(mouse_pos):
-                    print(open('U+P.txt').read())
+    
+                    if showAll_rect.collidepoint(mouse_pos):
+                        print(open('U+P.txt').read())
                     
             if event.type == pygame.QUIT:
                 run = False
